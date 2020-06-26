@@ -4,15 +4,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
 	
+	private Integer id;
+	@Id
 	private String nome;
 	
-	private Collection<Transaction> transactions = new ArrayList<>();
-
+	
 	public User(Integer id, String nome) {
 		this.id = id;
 		this.nome = nome;
@@ -38,13 +44,7 @@ public class User implements Serializable{
 		this.nome = nome;
 	}
 
-	public Collection<Transaction> getTransactions() {
-		return transactions;
-	}
-
-	public void setTransactions(Collection<Transaction> transactions) {
-		this.transactions = transactions;
-	}
+	
 
 	@Override
 	public int hashCode() {

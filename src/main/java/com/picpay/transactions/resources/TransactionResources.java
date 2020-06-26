@@ -1,45 +1,57 @@
 package com.picpay.transactions.resources;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.net.URI;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.picpay.transactions.DTO.UserDTO;
+import com.picpay.transactions.DTO.TransactionNewDTO;
 import com.picpay.transactions.domain.Transaction;
-import com.picpay.transactions.domain.User;
+import com.picpay.transactions.services.TransactionService;
 
 @RestController
 @RequestMapping(value = "/transactions")
 public class TransactionResources {
+	
+	@Autowired
+	private TransactionService service;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public List<Transaction> findAll(){
-		User u1 = new User(1, "Paulo");
-		User u2 = new User(2, "Ana");
-		User u3 = new User(3, "Marcos");
-		User u4 = new User(4, "Maria");
+	public ResponseEntity<List<Transaction>> findAll(){
 		
-		UserDTO uDto1 = new UserDTO(u1);
-		UserDTO uDto2 = new UserDTO(u2);
-		UserDTO uDto3 = new UserDTO(u3);
-		UserDTO uDto4 = new UserDTO(u4);
+		List<Transaction> list = service.findAll();
 		
-		
-		Transaction t1 = new Transaction(1, uDto1, uDto2);
-		Transaction t2 = new Transaction(2, uDto2, uDto3);
-		Transaction t3 = new Transaction(3, uDto3, uDto4);
-		
-		List<Transaction> transactions = new ArrayList<>();
-		
-		transactions.addAll(Arrays.asList(t1, t2, t3));
-		
-				
-		return transactions;
+		return ResponseEntity.ok().body(list);
 		
 	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
+	public ResponseEntity<Transaction> find(@PathVariable Integer id){
+		
+		Transaction trans = service.find(id);
+		
+		return ResponseEntity.ok().body(trans);
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@RequestBody TransactionNewDTO objDto) {
+		Transaction obj = service.fromDto(objDto);
+		
+			obj = service.insert(obj);
+		
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+			return ResponseEntity.created(uri).build();
+	}
+	
+	
 	
 }

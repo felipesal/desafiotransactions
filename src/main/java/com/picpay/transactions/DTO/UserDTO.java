@@ -9,17 +9,10 @@ public class UserDTO {
 	private String nome;
 
 	public UserDTO(User obj) {
-		this.id = obj.getId();
 		this.nome = obj.getNome();
+		this.id = obj.getId();
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getNome() {
 		return nome;
@@ -27,6 +20,16 @@ public class UserDTO {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	

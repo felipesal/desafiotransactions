@@ -2,22 +2,36 @@ package com.picpay.transactions.domain;
 
 import java.io.Serializable;
 
-import com.picpay.transactions.DTO.UserDTO;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+import com.picpay.transactions.domain.enums.Status;
+
+@Entity
 public class Transaction implements Serializable{
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	private UserDTO payer;
+	private User payer;
 	
-	private UserDTO receiver;
+	private User receiver;
+	
+	private Double valor;
+	
+	private Integer status;
 
-	public Transaction(Integer id, UserDTO payer, UserDTO receiver) {
+	public Transaction(Integer id, User payer, User receiver, Double valor, Status status) {
 		super();
 		this.id = id;
 		this.payer = payer;
 		this.receiver = receiver;
+		this.valor = valor;
+		this.status = (status == null) ? null : status.getCod();
 	}
 
 	public Transaction() {
@@ -32,20 +46,38 @@ public class Transaction implements Serializable{
 		this.id = id;
 	}
 
-	public UserDTO getPayer() {
+	public User getPayer() {
 		return payer;
 	}
 
-	public void setPayer(UserDTO payer) {
+	public void setPayer(User payer) {
 		this.payer = payer;
 	}
 
-	public UserDTO getReceiver() {
+	public User getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(UserDTO receiver) {
+	public void setReceiver(User receiver) {
 		this.receiver = receiver;
+	}
+	
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+	
+	
+
+	public Status getStatus() {
+		return Status.toEnum(status);
+	}
+
+	public void setStatus(Status status) {
+		this.status = status.getCod();
 	}
 
 	@Override
